@@ -20,11 +20,12 @@ warnings.filterwarnings('ignore')
 
 
 # datasets
-labels = pd.read_csv("Labels.csv")
+labels = pd.read_csv("TrainingLabels.csv")
+labels2 = pd.read_csv("ValidLabels.csv")
 
 #Img folder path
 train_path = "Train_Images_Resized"
-validation_path = "Test_Images"
+validation_path = "Validation_Images_Resized"
 
 print(labels.columns)
 
@@ -34,9 +35,10 @@ print(labels.columns)
 # Data agumentation and pre-processing using tensorflow
 gen = ImageDataGenerator(
     rescale=1./255.,
-    horizontal_flip = True,
-    validation_split=0.2 # training: 80% data, validation: 20% data
+    horizontal_flip = True
 )
+
+#validation_split=0.2 # training: 80% data, validation: 20% data
 
 #Training Data
 train_generator = gen.flow_from_dataframe(
@@ -44,7 +46,6 @@ train_generator = gen.flow_from_dataframe(
     directory = train_path, # images data path / folder in which images are there
     x_col = 'ID',
     y_col = 'Character',
-    subset="training",
     color_mode="rgb",
     target_size = (331,331), # image height , image width
     class_mode="categorical",
@@ -55,11 +56,10 @@ train_generator = gen.flow_from_dataframe(
 
 #Validation Data
 validation_generator = gen.flow_from_dataframe(
-    labels, # dataframe
-    directory = train_path, # images data path / folder in which images are there
+    labels2, # dataframe
+    directory = validation_path, # images data path / folder in which images are there
     x_col = 'ID',
     y_col = 'Character',
-    subset="validation",
     color_mode="rgb",
     target_size = (331,331), # image height , image width
     class_mode="categorical",
