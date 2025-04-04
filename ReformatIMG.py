@@ -1,5 +1,5 @@
 '''This takes all of the images I have gathered from the path ML_Project -> Train_Images -> <Character_name>
-and resizes all of the images to 256x256 for processing. They are then dumped into ML_Project/Train_Images_Resized'''
+and resizes all of the images to 299x299 for processing. They are then dumped into ML_Project/Train_Images_Resized'''
 
 import os
 from PIL import Image
