@@ -17,10 +17,12 @@ for character in os.listdir(image_dir):
     i=0
     # Process each image in the character name folder
     for img_name in os.listdir(folder_path):
-        if i < 2:
-            data2.append([img_name, character])
+        base_name = os.path.splitext(img_name)[0] + ".jpg"  # Ensure .jpg extension
+
+        if i < 6:
+            data2.append([base_name, character])
         else:
-            data.append([img_name, character])
+            data.append([base_name, character])
         i+=1
         
 
