@@ -1,5 +1,5 @@
 '''This takes all of the images I have gathered from the path ML_Project -> Train_Images -> <Character_name>
-and resizes all of the images to 299x299 for processing. They are then dumped into ML_Project/Train_Images_Resized'''
+and resizes all of the images to 256x256 for processing. They are then dumped into ML_Project/Train_Images_Resized'''
 
 import os
 from PIL import Image
@@ -9,14 +9,13 @@ input_dir = "Train_Images"
 output_dir = "Train_Images_Resized"
 valid_path = "Validation_Images_Resized"
 
-# Ensure the output directory exists
+# Ensure the output directories exist
 os.makedirs(output_dir, exist_ok=True)
-os.makedirs(output_dir, exist_ok=True)
+os.makedirs(valid_path, exist_ok=True)
 
 # Loop through each name folder inside Train_Images
 for folder in os.listdir(input_dir):
     folder_path = os.path.join(input_dir, folder)
-
 
     i = 0
     # Process each image in the character name folder
@@ -25,15 +24,22 @@ for folder in os.listdir(input_dir):
 
         try:
             with Image.open(img_path) as img:
-                img_resized = img.resize((299, 299))  # Resize to 299x299 since that is required for InceptionResNetV2
-                if i < 2:
-                    output_img_path = os.path.join(valid_path, img_name)
-                else:
-                    output_img_path = os.path.join(output_dir, img_name)
+                img = img.convert("RGB")  # Convert to RGB for JPEG format
+                img_resized = img.resize((331, 331))  # Resize to 331x331
                 
-                img_resized.save(output_img_path)  # Save resized image
+                # Create new filename with .jpg extension
+                new_filename = os.path.splitext(img_name)[0] + ".jpg"
+                
+                # Determine output path
+                if i < 6:
+                    output_img_path = os.path.join(valid_path, new_filename)
+                else:
+                    output_img_path = os.path.join(output_dir, new_filename)
+
+                img_resized.save(output_img_path, format="JPEG")  # Save as JPEG
                 i += 1
+
         except Exception as e:
             print(f"Skipping {img_name}: {e}")
 
-print("Image resizing complete. Check the 'ML_Project_Resized' directory.")
+print("Image resizing complete. Check the resized directories.")
