@@ -35,6 +35,7 @@ class MainWindow(QMainWindow):
         # Create a label to display the video
         self.image_label = QLabel(self)
         self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.image_label.setFixedSize(640, 480)
 
          # --- File path input bar ---
         self.file_input = QLineEdit()
@@ -87,11 +88,12 @@ class MainWindow(QMainWindow):
             self.instructions2.hide()
             self.file_input.hide()
             self.instructions3.setText("PRESS SPACE TO CAPTURE IMAGE")
-            self.layout.insertWidget(1, self.image_label)  # Show camera feed
+            self.layout.insertWidget(1, self.image_label, alignment=Qt.AlignmentFlag.AlignHCenter)  # Show camera feed
             self.image_label.show()
             self.timer.timeout.connect(self.update_frame)
             self.timer.start(30)
             self.setFocus()
+            self.image_label.setStyleSheet("border: 10px solid yellow; border-radius: 10px;")
         else:
             self.timer.stop()
             self.image_label.clear()
@@ -101,6 +103,7 @@ class MainWindow(QMainWindow):
             self.file_input.show()
             self.instructions3.setText("Take Picture")
             self.camera_button.setText("Open Camera")
+            self.image_label.setStyleSheet("")
 
 
     def update_frame(self):
@@ -112,7 +115,12 @@ class MainWindow(QMainWindow):
             bytes_per_line = ch * w
             qt_image = QImage(rgb_frame.data, w, h, bytes_per_line, QImage.Format.Format_RGB888)
             pixmap = QPixmap.fromImage(qt_image)
-            self.image_label.setPixmap(pixmap)
+            self.image_label.setPixmap(pixmap.scaled(
+                self.image_label.size(), 
+                Qt.AspectRatioMode.KeepAspectRatio, 
+                Qt.TransformationMode.SmoothTransformation
+            ))
+
 
     def closeEvent(self, event):
         # Release the capture when closing
@@ -160,6 +168,10 @@ if __name__ == "__main__":
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
+
+
+
+
 
 
 
