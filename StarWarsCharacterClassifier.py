@@ -137,10 +137,10 @@ history = model.fit(train_generator,
     steps_per_epoch=STEP_SIZE_TRAIN,
     validation_data=validation_generator,
     validation_steps=STEP_SIZE_VALID,
-    epochs=6,
+    epochs=10,
     callbacks=[early])
 
-model.save("Model.keras")
+model.save("Model.keras", save_format="keras")
 
 
 accuracy = model.evaluate(validation_generator)
